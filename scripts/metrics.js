@@ -512,7 +512,7 @@ setHttpHandler(function(req) {
       if(res) {
         for(i = 0; i < res.length; i++) {
            var [src,dst] = res[i].key.split(SEP);
-           res.push({src:src,dst:dst,bps:res[i].value*8});
+           result.push({src:src,dst:dst,bps:res[i].value*8});
         }
       }
       break;
