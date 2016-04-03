@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>IX Metrics</title>
+  <link rel="stylesheet" href="../../../inc/inmsf/main.css" type="text/css">
+  <link rel="stylesheet" href="../../../inc/jquery-ui/jquery-ui.structure.min.css" type="text/css">
+  <link rel="stylesheet" href="../../../inc/jquery-ui/jquery-ui.theme.css" type="text/css">
+  <link rel="stylesheet" href="../../../inc/DataTables/css/dataTables.jqueryui.css" type="text/css">
+  <link rel="stylesheet" href="../../../inc/stripchart.css" type="text/css">
+  <link rel="stylesheet" href="css/app.css" type="text/css">
+  <script type="text/javascript" src="../../../inc/jquery.min.js"></script>
+  <script type="text/javascript" src="../../../inc/jquery-ui/jquery-ui.min.js"></script>
+  <script type="text/javascript" src="../../../inc/DataTables/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="../../../inc/DataTables/js/dataTables.jqueryui.min.js"></script>
+  <script type="text/javascript" src="../../../inc/jquery.stripchart.js"></script>
+  <script type="text/javascript" src="../../../inc/stripchart.js"></script>
+  <script type="text/javascript" src="js/app.js"></script>
+  <link rel="icon" type="image/png" href="../../../inc/img/favicon.png">
+</head>
+<body>
+  <div id="titleBar"><div id="product"><span id="logo"></span>IX Metrics</div></div>
+  <div id="tabs">
+    <span id="clone">
+       <button id="clone_button">New Window</button>
+    </span>
+    <ul>
+      <li><a href="#traffic">Traffic</a></li>
+      <li><a href="#ports">Ports</a></li>
+      <li><a href="#switches">Switches</a></li>
+      <li><a href="#links">Links</a></li>
+      <li><a href="#locations">Locations</a></li>
+      <li><a href="#settings">Settings</a></li>
+      <li><a href="#help">Help</a></li>
+    </ul>
+    <div id="traffic">
+      <div id="traffic-acc">
+        <div>
+          <h3>Protocols</h3>
+          <div>
+            <div id="topprotos" class="trend"></div>
+          </div>
+        </div>
+        <div>
+          <h3>Members</h3>
+          <div>
+            <div id="topsources" class="trend"></div>
+            <div id="topdestinations" class="trend"></div>
+            <div id="toppairs" class="trend"></div>
+          </div>
+        </div>
+        <div>
+          <h3>Unknown</h3>
+          <div>
+            <div id="topunknownsrc" class="trend"></div>
+            <div id="topunknowndst" class="trend"></div>
+          </div>
+        </div>
+        <div>
+          <h3>Packet Sizes</h3>
+          <div>
+            <div id="pktsizes" class="trend"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="ports">
+      <div id="ports-acc">
+        <div>
+          <h3>Utilization</h3>
+           <div>
+              <div id="utilizationin" class="trend"></div>
+              <div id="utilizationout" class="trend"></div>
+           </div>
+        </div>
+        <div>
+          <h3>Discards</h3>
+          <div>
+             <div id="discardsin" class="trend"></div>
+             <div id="discardsout" class="trend"></div>
+          </div>
+        </div>
+        <div>
+          <h3>Errors</h3>
+          <div>
+             <div id="errorsin" class="trend"></div>
+             <div id="errorsout" class="trend"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="switches">
+      <fieldset>
+	<legend>Summary</legend>
+        <label for="nodecount">Total Switches:</label>
+        <input id="nodecount" name="nodecount" size="6" readonly>
+        <label for="nodesdisconnected">Unlinked Switches:</label>
+        <input id="nodesdisconnected" name="nodesdisconnected" size="6" readonly>
+        <label for="portsdown">Ports Down:</label>
+        <input id="portsdown" name="portsdown" size="6" readonly>
+	<button id="refreshnodes">Refresh</button>
+      </fieldset>
+      <table id="nodestable" class="display" cellspacing="0" width="100%">
+	<thead>
+	  <tr>
+            <th></th>
+	    <th>Switch</th>
+            <th>%CPU</th>
+            <th>%Memory</th>
+            <th>%Disk</th>
+            <th>%Disk Part.</th>
+            <th>Up Days</th>
+	    <th>Links</th>
+            <th>Ports</th>
+            <th>Ports Down</th>
+	  </tr>
+	</thead>
+      </table>
+    </div>
+    <div id="links"> 
+      <fieldset>
+	<legend>Summary</legend>
+	<label for="linkcount">Total:</label>
+	<input id="linkcount" name="linkcount" size="6" readonly>
+	<label for="linkstatuscount">Down:</label>
+	<input id="linkstatuscount" name="linkstatuscount" size="6" readonly>
+	<label for="linkcounterscount">Missing Counters:</label>
+	<input id="linkcounterscount" name="linkcounterscount" size="6" readonly>
+	<label for="linksflowscount">Missing Flows:</label>
+	<input id="linkflowscount" name="linkflowscount" size="6" readonly>
+	<button id="refreshlinks">Refresh</button>
+      </fieldset>
+      <table id="linkstable" class="display" cellspacing="0" width="100%">
+        <thead>
+          <tr>
+            <th>Link</th>
+            <th>Switch 1</th>
+            <th>Port 1</th>
+            <th>Switch 2</th>
+            <th>Port 2</th>
+            <th>Speed</th>
+            <th>Status</th>
+            <th>Counters</th>
+            <th>Flows</th>
+         </thead>
+       </table>
+    </div>
+    <div id="locations">
+      <fieldset>
+	<legend>Summary</legend>
+        <label for="locationcount">Total:</label>
+        <input id="locationcount" name="locationcount" size="6" readonly>
+	<button id="refreshlocations">Refresh</button>
+      </fieldset>
+      <table id="locationstable" class="display" cellspacing="0" width="100%">
+	<thead>
+	  <tr>
+	    <th>Switch</th>
+	    <th>Port</th>
+            <th>VLAN</th>
+            <th>Member</th>
+            <th>Member MAC</th>
+            <th>Member MAC Vendor</th>
+	  </tr>
+	</thead>
+      </table>
+    </div>
+    <div id="settings">
+      <fieldset>
+         <legend>Members</legend>
+         <label for="membernum">Members:</label>
+         <input id="membernum" name="membernum" size="5" readonly>
+         <label for="macnum">MAC Addresses:</label>
+         <input id="macnum" name="connum" size="5" readonly>
+         <button id="membersrefresh">Refresh</button>
+         <input type="file" name="membersfile" id="membersfile" multiple="false" accept="application/json" />
+         <button id="membersset">Upload</button>
+         <button id="membersget">Inspect</button>
+      </fieldset>
+      <fieldset>
+         <legend>Topology</legend>
+         <label for="topologynodes">Switches:</label>
+         <input id="topologynodes" name="topologynodes" size="5" readonly>
+         <label for="topologylinks">Links:</label>
+         <input id="topologylinks" name="topologylinks" size="5" readonly>
+         <button id="topologyrefresh">Refresh</button>
+         <input type="file" name="topologyfile" id="topologyfile" multiple="false" accept="application/json" />
+         <button id="topologyset">Upload</button>
+         <button id="topologyget">Inspect</button>
+      </fieldset>
+    </div>
+    <div id="help">
+      <div id="help-acc">
+        <div>
+           <h3>About</h3>
+           <div>
+             <p><em>IX Metrics</em> provides real-time monitoring of traffic in a layer 2 Internet exchange. The application relies on standard sFlow instrumentation in the switches to provide measurements.</p>
+             <p><b>Note:</b> Certain IX Metrics features rely on the following sFlow extensions:</p>
+            <ul>
+               <li><a href="http://sflow.org/sflow_lag.txt">sFlow LAG Counters Structure</a></li>
+               <li><a href="http://sflow.org/sflow_host.txt">sFlow Host Structures</a></li>
+               <li><a href="http://sflow.org/sflow_openflow.txt">sFlow OpenFlow Structures</a></li>
+            </ul>
+           </div>
+        </div>
+        <div>
+          <h3>Getting Started</h3>
+          <div>
+            <p>The following configuration steps are required:</p>
+            <ol>
+              <li>Configure sFlow on all switches</li>
+              <li>Configure topology</li>
+              <li>Configure members</li>
+            </ol>
+            <p><b>Note:</b> Set the <i>oui.names=resources/config/oui.txt</i> sFlow-RT <a href="http://sflow-rt.com/reference.php#properties">System Property</a> to include <i>Member MAC Vendor</i> values in the <i>Locations</i> table.</p>
+          </div>
+        </div>
+        <div>
+          <h3>Configure sFlow on all switches</h3>
+          <div>
+            <p><a href="http://blog.sflow.com/2012/09/switch-configurations.html">Switch configurations</a> contains a repository of links describing how to configure sFlow on different vendor's switches.</p>
+          </div>
+        </div>
+        <div>
+        </div>
+        <div>
+          <h3>Configure topology</h3>
+          <div>
+	    <p>IX Metrics topology configuration is a JSON object. The following example illustrates the format:</p>
+	    <pre>{
+ &quot;links&quot;: {
+  &quot;L1&quot;: {
+   &quot;node1&quot;: &quot;leaf1&quot;,
+   &quot;port1&quot;: &quot;swp1s0&quot;,
+   &quot;node2&quot;: &quot;spine1&quot;,
+   &quot;port2&quot;: &quot;swp49&quot;
+  },
+  ...
+ }
+}</pre>
+<p>The topology.json file can be manually posted via the Settings tab in IX Metric's web interface, or through the REST API, e.g.:</p>
+<pre>curl -H 'Content-Type:application/json' -X PUT --data @topology.json http://localhost:8008/app/ix-metrics/scripts/metrics.js/topology/json</pre>
+<h4>Cumulus Linux</h4>
+	    <p>The above example is equivalent to the following <a href="http://docs.cumulusnetworks.com/display/CL25/Prescriptive+Topology+Manager+-+PTM">Prescriptive Topology Manager (PTM)</a> dot file:</p>
+	    <pre>graph G {
+  graph [hostidtype=&quot;hostname&quot;, version=&quot;1:0&quot;];
+  &quot;leaf1&quot;:&quot;swp1s0&quot; -- &quot;spine1&quot;:&quot;swp49&quot;;
+  ...
+}</pre>
+<p>The <a href="https://raw.githubusercontent.com/pphaal/acl_server/master/ptm.py">ptm.py</a> script converts a PTM dot file to IX Metric's JSON format, for example:</p>
+<pre>wget https://raw.githubusercontent.com/pphaal/acl_server/master/ptm.py
+chmod +x ptm.py
+ptm.py &lt; topology.dot &gt; topology.json</pre>
+<p>The topology must contain all inter-switch links, in particular when monitoring a <a href="http://docs.cumulusnetworks.com/display/CL25/Multi-Chassis+Link+Aggregation+-+CLAG+-+MLAG">CLAG</a> pod, include the peer switch connections.</p>
+<p>Note: If PTM is not being used to verify switch configurations, <a href="http://blog.sflow.com/2015/03/topology-discovery-with-cumulus-linux.html">Topology discovery with Cumulus Linux</a> describes an alternative method using LLDP.</p>
+<h4>Arista EOS</h4>
+<p>Arista <a href="https://eos.arista.com/fabric-visibility/">EOS Central: Fabric Visibility</a> article provides scripts for retrieving topology using eAPI</p>
+<h4>Other Vendors</h4>
+<p>If switches do not implement the extensions that allow naming information to be exporting using sFlow, then configuring <a href="http://sflow-rt.com/reference.php#properties">sFlow-RT Properties</a> to enable SNMP simplifies the contruction of the topology links information since the topology can be expressed in terms of
+sysName and ifName. Alternatively, a nodes section can be added to the topology to provide the mapping from switch and port names to sFlow agent address and port SNMP ifIndex numbers, e.g.</p>
+<pre>{
+ &quot;nodes&quot;: {
+  &quot;leaf1&quot;: {
+    &quot;agent&quot;:&quot;10.0.0.253&quot;,
+    &quot;ports&quot;:{
+      &quot;swp1s0&quot;:{&quot;ifindex&quot;:&quot;4&quot;},
+      ...
+    }
+  }
+ },
+ &quot;links&quot;: {
+   ...
+}</pre>
+	  </div>
+        </div>
+        <div>
+          <h3>Configure members</h3>
+          <div>
+            <p>The <a href="https://github.com/euro-ix/json-schemas/">IX Member List JSON Schema</a> is used to identify exchange members and their assigned MAC addresses.</p>
+           <p>Members information can be manually posted via the Settings tab in the IX Metric's web interface, or through the REST API, e.g.:</p>
+<pre>curl -H 'Content-Type:application/json' -X PUT @members.json http://localhost:8008/app/ix-metrics/scripts/metrics.js/members/json</pre>
+           <p><b>Note:</b> The <i>Traffic&gt;Unknown</i> charts show traffic from MAC addresses entering or leaving the IX fabric that haven't been assigned to members. Events are generated as well, identifying the member associated with the unknown MAC address if it originated from their IP address.</p>
+          </div>
+        </div>
+        <div>
+          <h3>InfluxDB and Syslog</h3>
+          <div>
+            <p>IX Metric supports <a href="https://influxdata.com/">InfluxDB</a> as a time series database for storing metrics. <a href="http://grafana.org/">Grafana</a> can be used to query the database and build custom dashboard templates for managing the exchange and for exchange members.</p>
+            <p>IX Metric can send events using the syslog protocol to SIEM tools such as <a href="https://www.elastic.co/products/logstash">Logstash</a> or Splunk.</p>
+            <p>Configure the following sFlow-RT <a href="http://sflow-rt.com/reference.php#properties">System Properties</a> to forward events and metrics:</p>
+            <table class="stripe">
+              <thead>
+                <tr><th>Property</th><th>Default</th><th>Description</th></tr>
+              </thead>
+              <tbody>
+                <tr class="even"><td>ix.influx.host</td><td></td><td>InfluxDB host</td></tr>
+                <tr class="odd"><td>ix.influx.db</td><td>ix</td><td>InfluxDB database name</td></tr>
+                <tr class="even"><td>ix.syslog.host</td><td></td><td>Syslog host</td></tr>
+                <tr class="odd"><td>ix.syslog.port</td><td>514</td><td>Syslog port</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <h3>REST API</h3>
+          <div>
+            <p>The IX Metrics user interface is built on a set of REST API calls that can be used to configure the software and retrieve data.</p>
+            <table class="stripe">
+              <thead><tr><th>URL</th><th>Operations</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr class="odd"><td>scripts/metrics.js/topology/json</td><td>GET, PUT, POST</td><td>Manage topology</td></tr>
+                <tr class="even"><td>scripts/metrics.js/members/json</td><td>GET, PUT, POST</td><td>Manage members</td></tr>
+                <tr class="odd"><td>scripts/metrics.js/metric/json</td><td>GET</td><td>Get latest metric values</td></tr>
+                <tr class="even"><td>scripts/metrics.js/metric/{name}/json</td><td>GET</td><td>Get latest value of named metric</td></tr>
+              </tbody>
+            </table>     
+          </div>
+        </div>
+      </div> 
+    </div>
+  </div>
+  <div id="copyright">Copyright &copy; 2015-2016 InMon Corp. ALL RIGHTS RESERVED</div>
+</body>
+</html>
