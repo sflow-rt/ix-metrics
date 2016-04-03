@@ -364,16 +364,6 @@ function nodes() {
       nodes.push(node);
     }
   }
-  // catch non-topology agents
-  for (var agent in agents()) {
-    if(agts.hasOwnProperty(agent)) continue;
-    let nnames = topologyNodesForAgent(agent);
-    let nname = nnames && nnames.length === 1 ? nnames[0] : agent;
-    let node = {name:nname};
-    node['link_count'] = 0;
-    addNodeStats(agent,node);
-    nodes.push(node);
-  }
   return nodes;
 }
 
