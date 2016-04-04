@@ -1,14 +1,13 @@
 // author: InMon Corp.
 // version: 0.3
-// date: 4/2/2016
+// date: 4/3/2016
 // description: sFlow-RT IX Metrics
 // copyright: Copyright (c) 2015,2016 InMon Corp.
 
 // TODO:
 // 1. verify that observed VLAN matches vlan_id in members file
-// 2. learn BGP peering relationships between members based on traffic
-// 3. link metrics to influxDB
-// 4. port metrics to influxDB
+// 2. link metrics to influxDB
+// 3. port metrics to influxDB
 
 include(scriptdir() + '/inc/trend.js');
 
@@ -102,6 +101,9 @@ setFlow('ix_pktsize', {keys:'range:bytes:0:63,range:bytes:64:64,range:bytes:65:1
 setFlow('ix_ip4', {keys:'macsource,group:ipsource:ix_member',value:'bytes',log:true,flowStart:true, n:N, t:T, fs:SEP});
 setFlow('ix_ip6', {keys:'macsource,group:ip6source:ix_member',value:'bytes',log:true,flowStart:true, n:N, t:T, fs:SEP});
 
+// find BGP connections
+setFlow('ix_bgp', {keys:'or:[map:macsource:ix_member]:[group:ipsource:ix_member]:[group:ip6source:ix_member],or:[map:macdestination:ix_member]:[group:ipdestination:ix_member]:[group:ip6destination:ix_member]',value:'frames',filter:'tcpsourceport=179|tcpdestinationport=179',log:true,flowStart:true, n:N, t:T, fs:SEP});
+
 // exceptions
 setFlow('ix_srcmacunknown', {keys:'macsource', value:'bytes', filter:'map:macsource:ix_member=null', n:N, t:T, fs:SEP});
 setFlow('ix_dstmacunknown', {keys:'macdestination', value:'bytes', filter:'map:macdestination:ix_member=null', n:N, t:T, fs:SEP});
@@ -148,6 +150,21 @@ function getMetric(res, idx, defVal) {
 function flowCount(flow) {
   var res = activeFlows('TOPOLOGY',flow,1,0,'edge');
   return res && res.length > 0 ? res[0].value : 0;
+}
+
+var bgp = {};
+var bgpLastSweep = 0;
+var bgpSweepInterval = 60 * 60 * 1000;
+var bgpAgingMs = 7 * 24 * 60 * 60 * 1000;
+function ageBGP(now) {
+  if(now - bgpLastSweep < bgpSweepInterval) return;
+  bgpLastSweep = now;
+
+  for(var key in bgp) {
+    if(now - bgp[key] > bgpAgingMs) {
+      delete bgp[key];
+    }
+  }
 }
 
 function influxEscape(str) {
@@ -268,6 +285,8 @@ setIntervalHandler(function() {
     updateInfluxDB();
     lastIval = ival;
   }
+
+  ageBGP(now);
 },1);
 
 function numberMetric(metric) {
@@ -480,8 +499,13 @@ setFlowHandler(function(flow) {
     let [smac,ethtype] = flow.flowKeys.split(SEP);
     sendWarning({ix_evt:"protocol", "mac":smac, "ethtype":ethtype});
     break;
+  case 'ix_bgp':
+    let [mem1,mem2] = flow.flowKeys.split(SEP);
+    let bgpkey = mem1 > mem2 ? mem2+SEP+mem1 : mem1+SEP+mem2;
+    bgp[bgpkey] = flow.start;
+    break;
   }
-},['ix_badprotocol','ix_ip4','ix_ip6']);
+},['ix_badprotocol','ix_ip4','ix_ip6','ix_bgp']);
 
 setHttpHandler(function(req) {
   var result, i, key, name, path = req.path;
@@ -556,6 +580,16 @@ setHttpHandler(function(req) {
     case 'links':
       if(path.length > 1) throw "not_found";
       result = links();
+      break;
+    case 'bgp':
+      result = {};
+      for(var mems in bgp) {
+        let [mem1,mem2] = mems.split(SEP);
+        if(!result[mem1]) result[mem1] = [];
+        if(!result[mem2]) result[mem2] = [];
+        result[mem1].push(mem2);
+        result[mem2].push(mem1);
+      }
       break;
     case 'members':
       if(path.length > 1) {
