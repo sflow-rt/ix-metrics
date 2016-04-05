@@ -29,7 +29,11 @@ $(function() {
     hlp4:'hide',
     hlp5:'hide',
     hlp6:'hide',
-    hlp7:'hide'
+    hlp7:'hide',
+    hlp8:'hide',
+    hlp9:'hide',
+    hlp10:'hide',
+    hlp11:'hide'
   };
 
   var state = {};

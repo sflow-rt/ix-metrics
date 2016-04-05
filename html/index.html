@@ -219,6 +219,20 @@
           <h3>Configure sFlow on all switches</h3>
           <div>
             <p><a href="http://blog.sflow.com/2012/09/switch-configurations.html">Switch configurations</a> contains a repository of links describing how to configure sFlow on different vendor's switches.</p>
+	     <p>Apply the following settings to every switch and port in the exchange (include all leaf, spine and host ports):</p>
+	     <table class="stripe">
+	       <thead><tr><th>Port Speed</th><th>Sampling Rate</th><th>Polling Interval</th></tr></thead>
+	       <tbody>
+		 <tr class="even"><td class="alignr">1 Gbit/s</td><td class="alignr">1-in-1,000</td><td class="alignr">20 seconds</td></tr>
+		 <tr class="odd"><td class="alignr">10 Gbit/s</td><td class="alignr">1-in-10,000</td><td class="alignr">20 seconds</td></tr>
+		 <tr class="even"><td class="alignr">25 Gbit/s</td><td class="alignr">1-in-25,000</td><td class="alignr">20 seconds</td></tr>
+		 <tr class="odd"><td class="alignr">40 Gbit/s</td><td class="alignr">1-in-40,000</td><td class="alignr">20 seconds</td></tr>
+		 <tr class="even"><td class="alignr">50 Gbit/s</td><td class="alignr">1-in-50,000</td><td class="alignr">20 seconds</td></tr>
+		 <tr class="odd"><td class="alignr">100 Gbit/s</td><td class="alignr">1-in-100,000</td><td class="alignr">20 seconds</td></tr>
+	       </tbody>
+	     </table>
+             <p>For switches that allow sampling direction to be specified, enable ingress only sampling. Sampling direction must be the same for all switches.</p>
+	     <p><b>Note:</b> sFlow instrumentation is build into data center switch ASICs and enabling monitoring should not impact performance. However, not all implementations are equal and it is prudent to verify that these settings do not generate excessive management CPU load and that switches don't drop samples during traffic peak loads.</p>
           </div>
         </div>
         <div>
@@ -283,6 +297,47 @@ sysName and ifName. Alternatively, a nodes section can be added to the topology 
           </div>
         </div>
         <div>
+          <h3>Verify that exchange is fully monitored</h3>
+          <div>
+            <p>The <i>Switches</i> and <i>Links</i> pages can be used to verify that all the switches and links specified in the topology are being monitored. Each page has a refresh button in the summary bar that retrieves current information and updates the display.</p>
+            <h4>Switches</h4>
+            <p>Switches in the topology where sFlow is being received are shown. Click on the green + icon to get details about a particular switch and its interfaces.</p>
+            <h4>Links</h4>
+            <p>All the links in the specified topology are shown along with information indicating operational status and reception of counter and flow data from each both ends of the link.</p>
+          </div>
+        </div>
+        <div>
+          <h3>Monitoring Traffic</h3>
+          <div>
+            <h4>Protocols</h4>
+              <p>Top protocols by Ethernet packet type. Click on a peak in the chart to see top protocols at that time.</p>
+            <h4>Members</h4>
+              <p>Top source member, destination member, and source member to destination member flows. Click on peaks in the charts to see values at that time.</p>
+            <h4>Unknown</h4>
+              <p>Top source and destination MAC addresses that cannot be mapped to members. Click on peaks in the charts to see values at that time.</p>
+              <p>Charts are used to identify missing / incorrect information in the members configuration. The <i>Locations</i> tab can be used to locate the unknown addresses. Install an updated configuration and check the charts to verify that the traffic can be identified.</p>
+            <h4>Packet Sizes</h4>
+              <p>Trend of Ethernet frame size distribution for packets entering exchange.</p>
+          </div>
+        </div>
+        <div>
+          <h3>Monitoring Ports</h3>
+          <div>
+            <h4>Utilization</h4>
+            <p>Top switch ports by ingress and egress utilization. Click on a peak in the chart to see the top ports at that time.</p>
+            <h4>Discards</h4>
+            <p>Top switch ports by ingress and egress packet discard rates.  Click on a peak in the chart to see the top ports at that time.</p>
+            <h4>Errors</h4>
+            <p>Top switch ports by ingress and egress packet error rates.  Click on a peak in the chart to see the top ports at that time.</p>
+          </div>
+        </div>
+        <div>
+          <h3>Locating Members</h3>
+          <div>
+           <p>The <i>Locations</i> tab contains a table that lists MAC addresses and the switch and port connecting them to the exchange. The table has a search box in the top right that can be used find a member by its MAC, name, or to find the hosts connected to a specific switch. Click on the refresh button in the <i>Summary</i> section to ensure that the most recent location information is available.</p>
+          </div>
+        </div>
+        <div>
           <h3>InfluxDB and Syslog</h3>
           <div>
             <p>IX Metric supports <a href="https://influxdata.com/">InfluxDB</a> as a time series database for storing metrics. <a href="http://grafana.org/">Grafana</a> can be used to query the database and build custom dashboard templates for managing the exchange and for exchange members.</p>
@@ -308,12 +363,12 @@ sysName and ifName. Alternatively, a nodes section can be added to the topology 
             <table class="stripe">
               <thead><tr><th>URL</th><th>Operations</th><th>Description</th></tr></thead>
               <tbody>
-                <tr class="odd"><td>scripts/metrics.js/topology/json</td><td>GET, PUT, POST</td><td>Manage topology</td></tr>
-                <tr class="even"><td>scripts/metrics.js/members/json</td><td>GET, PUT, POST</td><td>Manage members</td></tr>
-                <tr class="odd"><td>scripts/metrics.js/metric/json</td><td>GET</td><td>Get latest metric values</td></tr>
+                <tr class="odd"><td><a href="../scripts/metrics.js/topology/json">scripts/metrics.js/topology/json</a></td><td>GET, PUT, POST</td><td>Manage topology</td></tr>
+                <tr class="even"><td><a href="../scripts/metrics.js/members/json">scripts/metrics.js/members/json</a></td><td>GET, PUT, POST</td><td>Manage members</td></tr>
+                <tr class="odd"><td><a href="../scripts/metrics.js/metric/json">scripts/metrics.js/metric/json</a></td><td>GET</td><td>Get latest metric values</td></tr>
                 <tr class="even"><td>scripts/metrics.js/metric/{name}/json</td><td>GET</td><td>Get latest value of named metric</td></tr>
-                <tr class="odd"><td>scripts/metrics.js/matrix/json</td><td>GET</td><td>Get inter-member traffic matrix</td></tr>
-                <tr class="even"><td>scripts/metrics.js/bgp/json</td><td>GET</td><td>Get BGP peering connections</td></tr>
+                <tr class="odd"><td><a href="../scripts/metrics.js/matrix/json">scripts/metrics.js/matrix/json</a></td><td>GET</td><td>Get inter-member traffic matrix</td></tr>
+                <tr class="even"><td><a href="../scripts/metrics.js/bgp/json">scripts/metrics.js/bgp/json</a></td><td>GET</td><td>Get BGP peering connections</td></tr>
               </tbody>
             </table>     
           </div>
