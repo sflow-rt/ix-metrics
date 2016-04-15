@@ -89,13 +89,13 @@ var T = 15;
 var N = 10;
 
 // metrics
-setFlow('ix_bytes', {value:'bytes', t:T, fs: SEP});
-setFlow('ix_frames', {value:'frames', t:T, fs:SEP});
-setFlow('ix_src', {keys:'map:macsource:ix_member', value:'bytes', n:N, t:T, fs:SEP});
-setFlow('ix_dst', {keys:'map:macdestination:ix_member', value:'bytes', n:N, t:T, fs:SEP});
-setFlow('ix_pair', {keys:'map:macsource:ix_member,map:macdestination:ix_member', value:'bytes', n:20, t:T, fs:SEP});
-setFlow('ix_protocol', {keys:'ethernetprotocol', value:'bytes', n:N, t:T, fs:SEP}); 
-setFlow('ix_pktsize', {keys:'range:bytes:0:63,range:bytes:64:64,range:bytes:65:123,range:bytes:128:255,range:bytes:256:511,range:bytes:512:1023,range:bytes:1024:1517,range:bytes:1518:1518,range:bytes:1519', value:'frames', n:9, t:T});
+setFlow('ix_bytes', {value:'bytes', t:T, fs: SEP, filter:'direction=ingress'});
+setFlow('ix_frames', {value:'frames', t:T, fs:SEP, filter:'direction=ingress'});
+setFlow('ix_src', {keys:'map:macsource:ix_member', value:'bytes', n:N, t:T, fs:SEP, filter:'direction=ingress'});
+setFlow('ix_dst', {keys:'map:macdestination:ix_member', value:'bytes', n:N, t:T, fs:SEP, filter:'direction=ingress'});
+setFlow('ix_pair', {keys:'map:macsource:ix_member,map:macdestination:ix_member', value:'bytes', n:20, t:T, fs:SEP, filter:'direction=ingress'});
+setFlow('ix_protocol', {keys:'ethernetprotocol', value:'bytes', n:N, t:T, fs:SEP, filter:'direction=ingress'}); 
+setFlow('ix_pktsize', {keys:'range:bytes:0:63,range:bytes:64:64,range:bytes:65:123,range:bytes:128:255,range:bytes:256:511,range:bytes:512:1023,range:bytes:1024:1517,range:bytes:1518:1518,range:bytes:1519', value:'frames', n:9, t:T, filter:'direction=ingress'});
 
 // find member macs
 setFlow('ix_ip4', {keys:'macsource,group:ipsource:ix_member',value:'bytes',log:true,flowStart:true, n:N, t:T, fs:SEP});
@@ -105,8 +105,8 @@ setFlow('ix_ip6', {keys:'macsource,group:ip6source:ix_member',value:'bytes',log:
 setFlow('ix_bgp', {keys:'or:[map:macsource:ix_member]:[group:ipsource:ix_member]:[group:ip6source:ix_member],or:[map:macdestination:ix_member]:[group:ipdestination:ix_member]:[group:ip6destination:ix_member]',value:'frames',filter:'tcpsourceport=179|tcpdestinationport=179',log:true,flowStart:true, n:N, t:T, fs:SEP});
 
 // exceptions
-setFlow('ix_srcmacunknown', {keys:'macsource', value:'bytes', filter:'map:macsource:ix_member=null', n:N, t:T, fs:SEP});
-setFlow('ix_dstmacunknown', {keys:'macdestination', value:'bytes', filter:'map:macdestination:ix_member=null', n:N, t:T, fs:SEP});
+setFlow('ix_srcmacunknown', {keys:'macsource', value:'bytes', filter:'direction=ingress&map:macsource:ix_member=null', n:N, t:T, fs:SEP});
+setFlow('ix_dstmacunknown', {keys:'macdestination', value:'bytes', filter:'direction=ingress&map:macdestination:ix_member=null', n:N, t:T, fs:SEP});
 setFlow('ix_badprotocol', {keys:'macsource,ethernetprotocol', value:'frames', filter:'ethernetprotocol!=2048,2054,34525', n:N, t:T, fs:SEP, log:true, flowStart:true});
 
 var other = '-other-';
