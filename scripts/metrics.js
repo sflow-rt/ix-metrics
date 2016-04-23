@@ -95,7 +95,7 @@ setFlow('ix_src', {keys:'map:macsource:ix_member', value:'bytes', n:N, t:T, fs:S
 setFlow('ix_dst', {keys:'map:macdestination:ix_member', value:'bytes', n:N, t:T, fs:SEP, filter:'direction=ingress'});
 setFlow('ix_pair', {keys:'map:macsource:ix_member,map:macdestination:ix_member', value:'bytes', n:20, t:T, fs:SEP, filter:'direction=ingress'});
 setFlow('ix_protocol', {keys:'ethernetprotocol', value:'bytes', n:N, t:T, fs:SEP, filter:'direction=ingress'}); 
-setFlow('ix_pktsize', {keys:'range:bytes:0:63,range:bytes:64:64,range:bytes:65:123,range:bytes:128:255,range:bytes:256:511,range:bytes:512:1023,range:bytes:1024:1517,range:bytes:1518:1518,range:bytes:1519', value:'frames', n:9, t:T, filter:'direction=ingress'});
+setFlow('ix_pktsize', {keys:'range:bytes:0:63,range:bytes:64:64,range:bytes:65:127,range:bytes:128:255,range:bytes:256:511,range:bytes:512:1023,range:bytes:1024:1517,range:bytes:1518:1518,range:bytes:1519', value:'frames', n:9, t:T, filter:'direction=ingress'});
 
 // find member macs
 setFlow('ix_ip4', {keys:'macsource,group:ipsource:ix_member',value:'bytes',log:true,flowStart:true, n:N, t:T, fs:SEP});
