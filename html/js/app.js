@@ -354,13 +354,7 @@ $(function() {
   refreshTopology();
 
   function getTopology() {
-    $.ajax({
-      url:topologyURL,
-      dataType: 'json',
-      success: function(data) {
-        location.href = 'data:application/json,' + encodeURIComponent(JSON.stringify(data,null,1));
-      }
-    });
+    location.href = topologyURL;
   }
   
   $('#topologyrefresh').button({icons:{primary:'ui-icon-arrowrefresh-1-e'},text:false}).click(refreshTopology);
@@ -587,13 +581,7 @@ $(function() {
   refreshMembers();
 
   function getMembers() {
-    $.ajax({
-      url:membersURL,
-      dataType: 'json',
-      success: function(data) {
-        location.href = 'data:application/json,' + encodeURIComponent(JSON.stringify(data,null,1));
-      }
-    });
+    location.href = membersURL;
   }
  
   $('#membersrefresh').button({icons:{primary:'ui-icon-arrowrefresh-1-e'},text:false}).click(refreshMembers);
