@@ -359,7 +359,7 @@ $(function() {
   
   $('#topologyrefresh').button({icons:{primary:'ui-icon-arrowrefresh-1-e'},text:false}).click(refreshTopology);
   $('#topologyget').button({icons:{primary:'ui-icon-search'},text:false}).click(getTopology);
-  $('#topologyfile').hide().change(function(evt) {
+  $('#topologyfile').hide().change(function(event) {
     var input = event.target;
     var reader = new FileReader();
     $this = $(this);
@@ -586,7 +586,7 @@ $(function() {
  
   $('#membersrefresh').button({icons:{primary:'ui-icon-arrowrefresh-1-e'},text:false}).click(refreshMembers);
   $('#membersget').button({icons:{primary:'ui-icon-search'},text:false}).click(getMembers);
-  $('#membersfile').hide().change(function(evt) {
+  $('#membersfile').hide().change(function(event) {
     var input = event.target;
     var reader = new FileReader();
     $this = $(this);
