@@ -227,9 +227,7 @@ function updateInfluxDB() {
 // log metrics to database every 15 seconds
 var logStep = 15 * 1000;
 var lastIval = 0;
-setIntervalHandler(function() {
-  var now = (new Date()).getTime();
-
+setIntervalHandler(function(now) {
   points = {};
 
   var bps = flowCount('ix_bytes') * 8;
@@ -278,7 +276,7 @@ setIntervalHandler(function() {
   points['dist-1518'] = ix1518 * scale;
   points['dist-1519-'] = ix1519 * scale;
 
-  trend.addPoints(points);
+  trend.addPoints(now,points);
 
   var ival = Math.floor(now/logStep);
   if(ival > lastIval) {
