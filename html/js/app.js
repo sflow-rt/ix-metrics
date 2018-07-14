@@ -611,10 +611,8 @@ $(function() {
     $.event.trigger({type:'updateChart'});
   });
 
-  $(document).ready(function() {
-    pollTrends();
-    initializeNodesTable();
-    initializeLinksTable();
-    initializeLocationsTable();
-  });
+  pollTrends();
+  initializeNodesTable();
+  initializeLinksTable();
+  initializeLocationsTable();
 });
