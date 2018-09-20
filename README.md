@@ -10,6 +10,9 @@ https://blog.sflow.com/2016/04/internet-exchange-ix-metrics.html
 2. Run command: `sflow-rt/get-app.sh sflow-rt ix-metrics`
 3. Restart sFlow-RT
 
+Alternatively, use the Docker image:
+https://hub.docker.com/r/sflow/ix-metrics/
+
 Online help is available through web UI.
 
 For more information, visit:
