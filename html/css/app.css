@@ -1,4 +1,5 @@
 body { font-family: Verdana,Arial,sans-serif; }
+#titleBar { font-weight: normal; }
 #clone { float: right; padding: .6em; position: relative; z-index: 1; }
 #clone_button { height: 18px; }
 #tabs { margin: 5px; min-height: 400px; font-size:80%;}
