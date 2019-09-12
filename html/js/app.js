@@ -70,12 +70,12 @@ $(function() {
   }
 
   function getState(key, defVal) {
-    return window.sessionStorage.getItem(key) || state[key] || defVal;
+    return window.sessionStorage.getItem('ix_'+key) || state[key] || defVal;
   }
 
   function setState(key, val, showQuery) {
     state[key] = val;
-    window.sessionStorage.setItem(key, val);
+    window.sessionStorage.setItem('ix_'+key, val);
     if(showQuery) {
       var query = createQuery(state);
       window.history.replaceState({},'',query ? '?' + query : './');
