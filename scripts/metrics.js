@@ -36,8 +36,7 @@ var numMembers = 0;
 var numMacs = 0;
 function updateMemberInfo() {
   var memberToMac,memberToIP,member,name,macs,ips,conns,j,conn,vlan_list,k,vlan,mac;
-  if(!members.version) return;
-  if(!(members.version === "0.4" || members.version === "0.5")) return;
+  if(!members.version || 1.0 > members.version) return;
   if(!members.member_list) return;
 
   memberToMac = {};
@@ -62,15 +61,19 @@ function updateMemberInfo() {
       for(var k = 0; k < vlan_list.length; k++) {
         vlan = vlan_list[k];
         if(!vlan) continue;
-        if(vlan.ipv4 && vlan.ipv4.address) ips.push(vlan.ipv4.address);
-        if(vlan.ipv6 && vlan.ipv6.address) ips.push(vlan.ipv6.address);
-        mac = vlan.mac_address;
-        if(!mac) continue;
-        mac = mac.replace(/:/g,'').toUpperCase();
-        if('UNKNOWN' === mac) continue;
-        macs.push(mac);
-        macToMember[mac] = name;
-        numMacs++;
+        if(vlan.ipv4) {
+          if(vlan.ipv4.address) ips.push(vlan.ipv4.address);
+          if(vlan.ipv4.mac_addresses) macs = macs.concat(vlan.ipv4.mac_addresses);
+        }
+        if(vlan.ipv6) {
+          if(vlan.ipv6.address) ips.push(vlan.ipv6.address);
+          if(vlan.ipv6.mac_addresses) macs = macs.concat(vlan.ipv6.mac_addresses);
+        }
+        macs = macs.filter((mac,idx,arr) => arr.indexOf(mac) === idx && 'UNKNOWN' !== mac).map(mac => mac.replace(/:/g,'').toUpperCase());
+        for(var m = 0; m < macs.length; m++) {
+          let mac = macs[m];
+          macToMember[mac] = name;
+        }
       }
     }
     if(ips.length > 0) memberToIP[name] = ips;
@@ -78,6 +81,7 @@ function updateMemberInfo() {
   }
   setGroups('ix_member',memberToIP);
   setMap('ix_member',memberToMac);
+  numMacs = Object.keys(macToMember).length;
 }
 updateMemberInfo();
 

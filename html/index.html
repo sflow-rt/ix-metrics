@@ -291,7 +291,7 @@ sysName and ifName. Alternatively, a nodes section can be added to the topology 
         <div>
           <h3>Configure members</h3>
           <div>
-            <p>The <a href="https://github.com/euro-ix/json-schemas/">IX Member List JSON Schema</a> is used to identify exchange members and their assigned MAC addresses.</p>
+            <p>The <a href="https://github.com/euro-ix/json-schemas/">IX-F Member Export JSON Schema V1.0</a> is used to identify exchange members and their assigned MAC addresses.</p>
            <p>Members information can be manually posted via the Settings tab in the IX Metric's web interface, or through the REST API, e.g.:</p>
 <pre>curl -H 'Content-Type:application/json' -X PUT @members.json http://localhost:8008/app/ix-metrics/scripts/metrics.js/members/json</pre>
            <p><b>Note:</b> The <i>Traffic&gt;Unknown</i> charts show traffic from MAC addresses entering or leaving the IX fabric that haven't been assigned to members. Events are generated as well, identifying the member associated with the unknown MAC address if it originated from their IP address.</p>
